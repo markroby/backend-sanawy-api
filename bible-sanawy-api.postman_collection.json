@@ -1,0 +1,317 @@
+{
+    "info": {
+        "name": "Bible Sanawy API",
+        "_postman_id": "bible-sanawy-api-collection",
+        "description": "Postman collection for testing Bible Sanawy backend API (localhost:6060)",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Auth",
+            "item": [
+                {
+                    "name": "Register",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"username_up\": \"admin\",\n    \"Password_up\": \"1234\",\n    \"email_up\": \"mm3906760@gmail.com\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:6060/api/auth/register",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6060",
+                            "path": [
+                                "api",
+                                "auth",
+                                "register"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"username_up\": \"admin\",\n    \"Password_up\": \"1234\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:6060/api/auth/login",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6060",
+                            "path": [
+                                "api",
+                                "auth",
+                                "login"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Students",
+            "item": [
+                {
+                    "name": "Get All Students",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://localhost:6060/api/students",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6060",
+                            "path": [
+                                "api",
+                                "students"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Add Student",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Mark Roby Shafik\",\n    \"student_number\": \"1033038532\",\n    \"class\": \"Gold 2025\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:6060/api/students",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6060",
+                            "path": [
+                                "api",
+                                "students"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Attendance",
+            "item": [
+                {
+                    "name": "Get Attendance",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://localhost:6060/api/attendance",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6060",
+                            "path": [
+                                "api",
+                                "attendance"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Add Attendance",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"student_name\": \"Mark Roby Shafik\",\n    \"date\": \"2025-10-10\",\n    \"status\": \"Present\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:6060/api/attendance",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6060",
+                            "path": [
+                                "api",
+                                "attendance"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Points",
+            "item": [
+                {
+                    "name": "Get Points",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://localhost:6060/api/points",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6060",
+                            "path": [
+                                "api",
+                                "points"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Add Points",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"student_name\": \"Mark Roby Shafik\",\n    \"points\": 15,\n    \"reason\": \"Participation\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:6060/api/points",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6060",
+                            "path": [
+                                "api",
+                                "points"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Ranking",
+            "item": [
+                {
+                    "name": "Get Ranking",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://localhost:6060/api/ranking",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6060",
+                            "path": [
+                                "api",
+                                "ranking"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Dashboard",
+            "item": [
+                {
+                    "name": "Get Dashboard Stats",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://localhost:6060/api/dashboard",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6060",
+                            "path": [
+                                "api",
+                                "dashboard"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Email",
+            "item": [
+                {
+                    "name": "Send Email",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"to\": \"test@example.com\",\n    \"subject\": \"Welcome to Bible Sanawy!\",\n    \"message\": \"This is a test email from the Bible Sanawy API.\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:6060/api/email/send",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6060",
+                            "path": [
+                                "api",
+                                "email",
+                                "send"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ]
+}
