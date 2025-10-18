@@ -20,3 +20,5 @@ The API servers on port 6060 by default. Endpoints are under /api/*
 
 Security note:
 - The .env in this package contains the MongoDB URI and email credentials you provided. Keep it safe.
+
+# backend-sanawy-api
