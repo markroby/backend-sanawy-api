@@ -1,0 +1,579 @@
+{
+	"info": {
+		"_postman_id": "341b625f-23e0-4b57-9f6a-06d6a929b226",
+		"name": "Bible Sanawy API",
+		"description": "Postman collection for testing Bible Sanawy backend API (localhost:6060)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49167733",
+		"_collection_link": "https://markroby2002-6631262.postman.co/workspace/mark-roby's-Workspace~a5681ccd-7035-4c8a-8390-87fe3147905e/collection/49167733-341b625f-23e0-4b57-9f6a-06d6a929b226?action=share&source=collection_link&creator=49167733"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username_up\": \"admin\",\n    \"Password_up\": \"1234\",\n    \"email_up\": \"mm3906760@gmail.com\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:6060/api/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username_up\": \"mark\",\n    \"Password_up\": \"123\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:6060/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Students",
+			"item": [
+				{
+					"name": "Get All Students",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:6060/api/students",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"api",
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Student",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n \"student_name\": \"Test User\",\n    \"student_number\": \"01033038532\",\n    \"student_mail\": \"test@example.com\",\n    \"student_location\": \"Nasr City\",\n    \"student_level\": \"2s\",\n    \"user_name\": \"mark\",\n    \"status\": \"0\",\n    \"isdeleted\": \"0\"\n}\n"
+						},
+						"url": {
+							"raw": "http://localhost:6060/api/students",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"api",
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete student",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:6060/api/students/68ecc4a9ca33e7aaaf84b1ee",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"api",
+								"students",
+								"68ecc4a9ca33e7aaaf84b1ee"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Attendance",
+			"item": [
+				{
+					"name": "Get Attendance",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:6060/api/attendance",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"api",
+								"attendance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Attendance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"attendance_code\": \"01033038532\",\n  \"bible_status\": \"from_church\"\n\n}\n"
+						},
+						"url": {
+							"raw": "http://localhost:6060/api/attendance",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"api",
+								"attendance"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Points",
+			"item": [
+				{
+					"name": "Get Points",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:6060/api/points/students?query=01033038532",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"api",
+								"points",
+								"students"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "01033038532"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Points",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"student_code\": \"01033038532\",\n  \"actions\": {\n    \"quiz\":   { \"enabled\": true, \"value\":10 },   // respected as 0 (custom provided)\n    \"task\":   { \"enabled\": true },               // missing -> use default from points_value\n    \"friend\": { \"enabled\": true, \"value\": \"\" },  // empty -> use default from points_value\n    \"bonus\":  { \"enabled\": true, \"value\": 13 }   // custom\n  },\n  \"date\": \"2025-09-05\"\n}\n"
+						},
+						"url": {
+							"raw": "http://localhost:6060/api/points",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"api",
+								"points"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ranking",
+			"item": [
+				{
+					"name": "Get Ranking top 3",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:6060/api/rankings/top3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"api",
+								"rankings",
+								"top3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all ranking",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:6060/api/rankings",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"api",
+								"rankings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ranking level",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:6060/api/rankings?level=1s",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"api",
+								"rankings"
+							],
+							"query": [
+								{
+									"key": "level",
+									"value": "1s"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dashboard",
+			"item": [
+				{
+					"name": "test the router",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:6060/api/dashboard/ping",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"api",
+								"dashboard",
+								"ping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Dashboard summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:6060/api/dashboard/summary",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"api",
+								"dashboard",
+								"summary"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Point  leaderboard",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:6060/api/dashboard/points/leaderboard?limit=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"api",
+								"dashboard",
+								"points",
+								"leaderboard"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:6060/api/dashboard/points/timeseries?granularity=day",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"api",
+								"dashboard",
+								"points",
+								"timeseries"
+							],
+							"query": [
+								{
+									"key": "granularity",
+									"value": "day"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "attendance time series",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:6060/api/dashboard/attendance/timeseries",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"api",
+								"dashboard",
+								"attendance",
+								"timeseries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Dashboard for leve",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:6060/api/dashboard/levels",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"api",
+								"dashboard",
+								"levels"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Dashboard for recent log",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:6060/api/dashboard/recent-logs?limit=25",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"api",
+								"dashboard",
+								"recent-logs"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "25"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Email",
+			"item": [
+				{
+					"name": "Send Email with ID",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"number\": \"01033038532\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:6060/api/email/idcard",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"api",
+								"email",
+								"idcard"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Request ID png",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:6060/api/email/idcard/preview?name=Mark%20roby%20shafik&number=01033038532",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"api",
+								"email",
+								"idcard",
+								"preview"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Mark%20roby%20shafik"
+								},
+								{
+									"key": "number",
+									"value": "01033038532"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
