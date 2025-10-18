@@ -1,87 +1,73 @@
-// server.js
-// ✅ Works on both: local dev (node server.js) and Vercel (serverless)
-
-// 1) Must be before any bwip-js imports:
-process.env.BWIPJS_CANVAS = '@napi-rs/canvas';
-
+require('dotenv').config();
 const express = require('express');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const cors = require('cors');
 const path = require('path');
-const dotenv = require('dotenv');
-dotenv.config();
+
+const connectDB = require('./config/database');
+
+// 🧩 ROUTES
+const authRoutes = require('./routes/auth');
+const studentRoutes = require('./routes/students');
+const attendanceRoutes = require('./routes/attendance');
+const pointsRoutes = require('./routes/points');
+const rankingsRoutes = require('./routes/rankings');
+const emailRoutes = require('./routes/email');
+const statsRoutes = require('./routes/dashboard');
 
 const app = express();
+const PORT = process.env.PORT || 6060;
 
-// ---- CORS (reads comma-separated ALLOWED_ORIGINS) ----
-const allowed = (process.env.ALLOWED_ORIGINS || '')
-  .split(',')
-  .map(s => s.trim())
-  .filter(Boolean);
-app.use(cors({
-  origin: function (origin, cb) {
-    if (!origin || allowed.length === 0 || allowed.includes(origin)) return cb(null, true);
-    return cb(new Error('CORS not allowed: ' + origin), false);
-  },
-  credentials: true,
-}));
+connectDB();
 
-app.use(express.json({ limit: '5mb' }));
+// Middleware
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// ---- MongoDB (lazy connect so serverless doesn’t crash) ----
-const mongoose = require('mongoose');
-let isConnected = 0;
-async function dbConnect() {
-  if (isConnected) return;
-  const uri = process.env.MONGODB_URI;
-  if (!uri) throw new Error('MONGODB_URI is not set');
-  await mongoose.connect(uri);
-  isConnected = 1;
-}
-app.use(async (_req, _res, next) => {
-  try { await dbConnect(); next(); } catch (e) { next(e); }
-});
-
-// ---- Static (uploads) ----
-// On Vercel, filesystem is ephemeral, but serving existing files is fine.
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// ---- Health check ----
-app.get('/api/health', (req, res) => res.json({ ok: true, ts: Date.now() }));
+// 🧩 CORS
+const allowed = (process.env.ALLOWED_ORIGINS || '').split(',');
+app.use(cors({
+  origin: function (origin, cb) {
+    // Allow requests with no origin (e.g., Postman, mobile apps)
+    if (!origin) return cb(null, true);
+    if (allowed.indexOf(origin) !== -1) return cb(null, true);
+    return cb(new Error('CORS policy blocked'), false);
+  },
+  credentials: true
+}));
 
-// ---- Your routes ----
-// If you previously had: app.use('/api/auth', require('./routes/auth'))     etc.
-// KEEP them as they are. Example:
-try {
-  // Only require routes if they exist in your project
-  const authRoutes = require('./routes/auth');            // adjust to your project
-  const attendanceRoutes = require('./routes/attendance');
-  const dashboardRoutes = require('./routes/dashboard');
-  const emailRoutes = require('./routes/email');
-  const pointsRoutes = require('./routes/points');
+// 🧩 SESSION
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'keyboard cat',
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
+  cookie: { maxAge: 24 * 60 * 60 * 1000, httpOnly: true }
+}));
 
-  app.use('/api/auth', authRoutes);
-  app.use('/api/attendance', attendanceRoutes);
-  app.use('/api/dashboard', dashboardRoutes);
-  app.use('/api/email', emailRoutes);
-  app.use('/api/points', pointsRoutes);
-} catch (e) {
-  // If your routes live at a different path (e.g., ./models, ./utils), keep your original requires instead.
-  // This try/catch prevents crashes if filenames differ; edit to match your repo.
-  console.warn('Route attach warning:', e.message);
-}
+// 🧩 ROUTES
+app.use('/api/auth', authRoutes);
+app.use('/api/students', studentRoutes);
+app.use('/api/attendance', attendanceRoutes);
+app.use('/api/points', pointsRoutes);
+app.use('/api/rankings', rankingsRoutes);
+app.use('/api/email', emailRoutes);
+app.use('/api/dashboard', require('./routes/dashboard'));
+console.log('✅ Dashboard routes mounted at /api/dashboard');
 
-// ---- Error handler (helps surface serverless crashes) ----
-app.use((err, _req, res, _next) => {
-  console.error('Error:', err);
+
+// 🧩 HEALTH CHECK
+app.get('/api/health', (req, res) => res.json({ ok: true, time: new Date() }));
+
+// 🧩 GLOBAL ERROR HANDLER
+app.use((err, req, res, next) => {
+  console.error(err && err.stack ? err.stack : err);
   res.status(500).json({ error: err.message || 'Internal Server Error' });
 });
 
-const PORT = process.env.PORT || 6060;
-if (process.env.VERCEL) {
-  // Export for serverless
-  module.exports = app;
-} else {
-  // Local dev
-  app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
-}
+// 🧩 START SERVER
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
