@@ -42,20 +42,41 @@ const allowed = (process.env.ALLOWED_ORIGINS || '')
 
 console.log('CORS allowed origins:', allowed);
 
-app.use(cors({
-  origin(origin, cb) {
-    // Allow tools with no Origin (curl/Postman/native apps)
-    if (!origin) return cb(null, true);
-    if (allowed.includes(origin)) return cb(null, true);
-    return cb(new Error('CORS blocked for origin: ' + origin), false);
-  },
-  credentials: true,
-  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
-  allowedHeaders: ['Content-Type','Authorization','X-Requested-With']
-}));
+// helper: check if origin is localhost on any port
+const isLocalhost = (origin) =>
+  !!origin && (/^http:\/\/localhost(?::\d+)?$/i.test(origin) || /^http:\/\/127\.0\.0\.1(?::\d+)?$/i.test(origin));
 
-// Handle preflight universally
-app.options('*', cors());
+const corsOptionsDelegate = (origin, cb) => {
+  // allow tools with no Origin (curl/Postman/native apps)
+  if (!origin) return cb(null, { origin: true, credentials: true });
+
+  if (allowed.includes(origin) || isLocalhost(origin)) {
+    return cb(null, {
+      origin: true,
+      credentials: true,
+      methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
+      allowedHeaders: ['Content-Type','Authorization','X-Requested-With','Cookie'],
+    });
+  }
+
+  // ⛔ Not allowed — DO NOT throw an Error (would become 500 on preflight)
+  return cb(null, { origin: false });
+};
+
+app.use(cors(corsOptionsDelegate));
+
+// Proper preflight handling with same policy
+app.options('*', (req, res) => {
+  const origin = req.headers.origin;
+  if (origin && (allowed.includes(origin) || isLocalhost(origin))) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Cookie');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  }
+  return res.sendStatus(204);
+});
 
 // ---------- Sessions (cookie-based auth) ----------
 /**
@@ -125,7 +146,7 @@ app.use((req, res) => {
 app.use((err, req, res, _next) => {
   console.error('❌ Error:', err.message);
   const origin = req.headers.origin;
-  if (origin && allowed.includes(origin)) {
+  if (origin && (allowed.includes(origin) || isLocalhost(origin))) {
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Vary', 'Origin');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -134,6 +155,6 @@ app.use((err, req, res, _next) => {
 });
 
 // ---------- Start server ----------
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
