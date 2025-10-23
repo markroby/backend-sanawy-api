@@ -5,7 +5,7 @@ const ctrl = require('../controllers/rankingsController');
 const { ensureAuth, ensureRole } = require('../middleware/auth');
 
 // Podium (top 3 overall, includes ties for 3rd)
-router.get('/top3', ensureAuth, ensureRole(['creator','admin']), ctrl.getTop3);
+router.get('/top3', ensureAuth, ensureRole(['creator','admin','student']), ctrl.getTop3);
 
 /**
  * @openapi
@@ -25,7 +25,7 @@ router.get('/top3', ensureAuth, ensureRole(['creator','admin']), ctrl.getTop3);
  */
 
 // Full rankings (high -> low). Optional: ?level=1s
-router.get('/', ensureAuth, ensureRole(['creator','admin']), ctrl.getRankings);
+router.get('/', ensureAuth, ensureRole(['creator','admin','student']), ctrl.getRankings);
 
 /**
  * @openapi
