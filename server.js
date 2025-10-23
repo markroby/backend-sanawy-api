@@ -29,12 +29,7 @@ app.set('trust proxy', 1);
   }
 })();
 
-// ---------- Middleware ----------
-app.use(express.json({ limit: '2mb' }));
-app.use(express.urlencoded({ extended: true }));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// ---------- CORS ----------
+// ---------- CORS (place BEFORE body parsers & routes) ----------
 const allowed = (process.env.ALLOWED_ORIGINS || '')
   .split(',')
   .map(s => s.trim())
@@ -46,37 +41,43 @@ console.log('CORS allowed origins:', allowed);
 const isLocalhost = (origin) =>
   !!origin && (/^http:\/\/localhost(?::\d+)?$/i.test(origin) || /^http:\/\/127\.0\.0\.1(?::\d+)?$/i.test(origin));
 
-const corsOptionsDelegate = (origin, cb) => {
-  // allow tools with no Origin (curl/Postman/native apps)
-  if (!origin) return cb(null, { origin: true, credentials: true });
-
-  if (allowed.includes(origin) || isLocalhost(origin)) {
-    return cb(null, {
+/**
+ * IMPORTANT: cors() expects the delegate signature (req, callback)
+ * not (origin, cb). Using (origin, cb) makes 'origin' be the req object.
+ */
+const corsOptionsDelegate = (req, callback) => {
+  const origin = req.header('Origin'); // may be undefined for non-browser calls
+  // Allow tools with no Origin (curl/Postman/native apps/health checks)
+  if (!origin) {
+    return callback(null, {
       origin: true,
       credentials: true,
       methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
-      allowedHeaders: ['Content-Type','Authorization','X-Requested-With','Cookie'],
+      allowedHeaders: ['Content-Type','Authorization','X-Requested-With'],
+      optionsSuccessStatus: 204,
     });
   }
 
-  // ⛔ Not allowed — DO NOT throw an Error (would become 500 on preflight)
-  return cb(null, { origin: false });
+  const isAllowed = allowed.includes(origin) || isLocalhost(origin);
+
+  // Reflect allowed origins; politely disable for others (no throw)
+  return callback(null, {
+    origin: isAllowed,
+    credentials: true, // required if you use cookie/session or Authorization with browsers
+    methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
+    allowedHeaders: ['Content-Type','Authorization','X-Requested-With'],
+    optionsSuccessStatus: 204,
+  });
 };
 
 app.use(cors(corsOptionsDelegate));
+// Proper preflight handling (no need to hand-roll headers)
+app.options('*', cors(corsOptionsDelegate));
 
-// Proper preflight handling with same policy
-app.options('*', (req, res) => {
-  const origin = req.headers.origin;
-  if (origin && (allowed.includes(origin) || isLocalhost(origin))) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Vary', 'Origin');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Cookie');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-  }
-  return res.sendStatus(204);
-});
+// ---------- Middleware ----------
+app.use(express.json({ limit: '2mb' }));
+app.use(express.urlencoded({ extended: true }));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ---------- Sessions (cookie-based auth) ----------
 /**
@@ -145,6 +146,7 @@ app.use((req, res) => {
 // ---------- Error handler ----------
 app.use((err, req, res, _next) => {
   console.error('❌ Error:', err.message);
+  // Best-effort CORS reflection on errors for allowed origins
   const origin = req.headers.origin;
   if (origin && (allowed.includes(origin) || isLocalhost(origin))) {
     res.setHeader('Access-Control-Allow-Origin', origin);
