@@ -1,6 +1,6 @@
 // controllers/authController.js
 const { promisify } = require('util');
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcrypt')
 ;
 const User = require('../models/users');
 const UserStatus = require('../models/user_status');
